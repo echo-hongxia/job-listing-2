@@ -1,0 +1,28 @@
+<section id="tutorials">
+  <div class="container">
+    <%= simple_form_for Tutorial.new do |f| %>
+      <%= f.input :title, :class => "form-control" %>
+      <%= f.input :url, :class => "form-control" %>
+      <%= f.submit :class => "btn btn-info submit" %>
+    <% end %>
+
+    <div class="tutorial_list">
+      <% @tutorials.each do |tutorial| %>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <%= tutorial.user.display_name %>
+          </div>
+          <div class="panel-body">
+            <%= tutorial.title %>
+
+            <% if current_user && tutorial.user == current_user %>
+              <p class="text-right">
+                <%= link_to "Delete", tutorial_path(tutorial), :method => :delete, :class => "btn btn-default" %>
+              </p>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
