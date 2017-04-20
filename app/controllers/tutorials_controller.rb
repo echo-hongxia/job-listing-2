@@ -18,6 +18,21 @@ class TutorialsController < ApplicationController
     redirect_to tutorials_path
   end
 
+  def like
+    @tutorial = Tutorial.find(params[:id])
+    unless @tutorial.find_like(current_user)
+      Like.create(:user => current_user, :tutorial => @tutorial)
+    end
+    redirect_to tutorials_path
+  end
+
+  def unlike
+    @tutorial = Tutorial.find(params[:id])
+    like = @tutorial.find_like(current_user)
+    like.destroy
+    redirect_to tutorials_path
+  end
+
   protected
 
   def tutorail_params

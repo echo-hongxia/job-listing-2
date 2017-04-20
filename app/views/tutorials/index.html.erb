@@ -6,14 +6,29 @@
       <%= f.submit :class => "btn btn-info submit" %>
     <% end %>
 
-    <div class="tutorial_list">
+    <!-- <div class="tutorial_list">
       <% @tutorials.each do |tutorial| %>
         <div class="panel panel-default">
           <div class="panel-heading">
             <%= tutorial.user.display_name %>
           </div>
           <div class="panel-body">
+            <p><%= tutorial.likes.count %> 👍 </p>
             <%= tutorial.title %>
+
+            <div class="text-right">
+              <% if tutorial.liked_users.any? %>
+              <%= tutorial.liked_users.map{ |u| u.display_name }.join(",") %> 点了赞
+              <% end %>
+
+              <% if current_user %>
+              <% if tutorial.find_like(current_user) %>
+              <%= link_to "取消", unlike_tutorial_path(tutorial), :method => :post, :class => "btn btn-default" %>
+              <% else %>
+              <%= link_to "赞", like_tutorial_path(tutorial), :method => :post, :class => "btn btn-default" %>
+              <% end %>
+              <% end %>
+            </div>
 
             <% if current_user && tutorial.user == current_user %>
               <p class="text-right">
@@ -22,6 +37,30 @@
             <% end %>
           </div>
         </div>
+      <% end %>
+    </div> -->
+    <div class="tutorial_list">
+      <% @tutorials.each do |tutorial| %>
+        <h2><%= tutorial.title %></h2>
+        <p>Submitted <%= time_ago_in_words(tutorial.created_at) %> by <%= tutorial.user.display_name %></p>
+
+        <div class="btn-group">
+          <a class="btn btn-default btn-sm" href="<%= tutorial.url %>"><i class="fa fa-link" aria-hidden="true"></i> 查看教程</a>
+
+          <% if current_user %>
+          <% if tutorial.find_like(current_user) %>
+          <%= link_to unlike_tutorial_path(tutorial), :method => :post, :class => "btn btn-default btn-sm" do %>
+            <i class="fa fa-thumbs-up" aria-hidden="true"></i> <%= tutorial.likes.count %>
+          <% end %>
+          <% else %>
+          <%= link_to like_tutorial_path(tutorial), :method => :post, :class => "btn btn-default btn-sm" do %>
+            <i class="fa fa-thumbs-o-up" aria-hidden="true"></i> <%= tutorial.likes.count %>
+          <% end %>
+          <% end %>
+          <% end %>
+
+        </div>
+        <hr>
       <% end %>
     </div>
   </div>

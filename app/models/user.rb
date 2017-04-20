@@ -10,6 +10,8 @@ class User < ApplicationRecord
 
   has_many :resumes
   has_many :tutorials
+  has_many :likes, :dependent => :destroy
+  has_many :liked_tutorials, :through => :likes, :source => :tutorial
 
   def display_name
     self.email.split("@").first
